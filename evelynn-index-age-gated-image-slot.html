@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Evelynn's Garden</title>
+
+<script type="text/javascript" nonce="3b7fb5d697cb44d29bec2e96117" src="//local.adguard.org?ts=1777355006984&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000a1b071f59bc6c3f295539b51%26ts%3D493733%26p%3Dfs%26cid%3D1%26sig%3Da64c2df3b8f4273db5131706aa5f051aa0edccbe6bbd0800921414e8e49c1f05%26v%3D0&amp;app=com.android.chrome&amp;css=2&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script><script type="text/javascript" nonce="3b7fb5d697cb44d29bec2e96117" src="//local.adguard.org?ts=1777355006984&amp;name=AdGuard%20Extra&amp;type=user-script"></script><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #030006;
+  --panel: rgba(18, 0, 28, .80);
+  --purple: #b35cff;
+  --violet: #6d28d9;
+  --pink: #ff9df5;
+  --red: #ff3d81;
+  --text: #fff4ff;
+  --muted: #d8b4fe;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,61,129,.22), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(179,92,255,.32), transparent 30%),
+    radial-gradient(circle at 50% 90%, rgba(109,40,217,.35), transparent 36%),
+    #030006;
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+  animation: breathe 11s ease-in-out infinite;
+}
+
+body.obeyed .wrap {
+  filter: brightness(1.08) contrast(1.04) saturate(1.08);
+}
+
+body.left .wrap {
+  filter: grayscale(.35) brightness(.86);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(circle, black, transparent 74%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    conic-gradient(
+      from 180deg,
+      transparent,
+      rgba(179,92,255,.08),
+      transparent,
+      rgba(255,61,129,.08),
+      transparent
+    );
+  animation: abyssSpin 18s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes breathe {
+  0%, 100% { background-size: 100% 100%; }
+  50% { background-size: 112% 112%; }
+}
+
+@keyframes abyssSpin {
+  to { transform: rotate(360deg); }
+}
+
+a, button {
+  font: inherit;
+}
+
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--pink);
+  border-radius: 50%;
+  box-shadow:
+    0 0 16px var(--purple),
+    0 0 34px rgba(255, 61, 129, .35);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: transform, left, top;
+}
+
+.cursor::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 16px var(--pink);
+}
+
+.trail {
+  position: fixed;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pink);
+  pointer-events: none;
+  opacity: .55;
+  z-index: 9998;
+  box-shadow: 0 0 14px var(--pink);
+  transform: translate(-50%, -50%);
+  animation: trailFade .5s ease forwards;
+}
+
+@keyframes trailFade {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.3);
+  }
+}
+
+
+.age-gate {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,157,245,.18), transparent 28%),
+    radial-gradient(circle, #140020, #020003 80%);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+  transition: opacity .7s ease, visibility .7s ease;
+}
+
+.age-gate.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.age-box {
+  width: min(540px, 92%);
+  text-align: center;
+  padding: 42px 28px;
+  border-radius: 32px;
+  background: rgba(20, 0, 35, 0.68);
+  border: 1px solid rgba(255, 157, 245, 0.3);
+  box-shadow:
+    0 0 44px rgba(168, 85, 247, 0.32),
+    inset 0 0 32px rgba(255, 157, 245, 0.05);
+  backdrop-filter: blur(16px);
+}
+
+.age-box h1 {
+  font-size: clamp(3.5rem, 13vw, 7rem);
+  font-family: Cinzel, serif;
+  line-height: 1;
+  text-shadow:
+    0 0 18px #ff9df5,
+    0 0 48px rgba(179,92,255,.7);
+}
+
+.age-box p {
+  color: var(--muted);
+  margin-top: 18px;
+  line-height: 1.7;
+  letter-spacing: .04em;
+}
+
+.age-buttons {
+  margin-top: 26px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.age-buttons button:nth-child(2) {
+  opacity: .75;
+}
+
+.gate {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(179,92,255,.32), transparent 32%),
+    radial-gradient(circle, #1b0030, #020003 72%);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  transition: opacity .9s ease, visibility .9s ease;
+}
+
+.gate.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.gate-box {
+  width: min(580px, 92%);
+  text-align: center;
+  padding: 42px 28px;
+  border: 1px solid rgba(255,157,245,.25);
+  border-radius: 34px;
+  background: rgba(10, 0, 18, .55);
+  box-shadow:
+    0 0 55px rgba(179,92,255,.25),
+    inset 0 0 45px rgba(255,157,245,.04);
+  backdrop-filter: blur(16px);
+}
+
+.gate h1 {
+  font-family: Cinzel, serif;
+  font-size: clamp(2.8rem, 11vw, 6rem);
+  letter-spacing: .14em;
+  text-shadow:
+    0 0 18px rgba(255,157,245,.85),
+    0 0 48px rgba(179,92,255,.75);
+}
+
+.gate p {
+  color: var(--muted);
+  margin: 18px 0 30px;
+  letter-spacing: .08em;
+  min-height: 1.5em;
+}
+
+.gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+button, .mini-button {
+  border: 1px solid rgba(240,171,252,.38);
+  background:
+    radial-gradient(circle at top, rgba(255,157,245,.22), transparent 44%),
+    linear-gradient(135deg, rgba(168,85,247,.38), rgba(76,29,149,.52));
+  color: var(--text);
+  border-radius: 999px;
+  padding: 14px 25px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  transition: .25s ease;
+  box-shadow: 0 0 24px rgba(168,85,247,.22);
+  cursor: none;
+}
+
+button:hover, .mini-button:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 0 26px rgba(240,171,252,.46),
+    0 0 70px rgba(179,92,255,.28);
+}
+
+.wrap {
+  width: min(1050px, 92%);
+  margin: auto;
+  padding: 70px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hero {
+  min-height: 82vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 70px 0 55px;
+}
+
+.hero-inner {
+  position: relative;
+}
+
+.sigil {
+  width: 230px;
+  height: 230px;
+  margin: 0 auto 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,157,245,.5);
+  display: grid;
+  place-items: center;
+  position: relative;
+  animation: pulse 3.5s infinite ease-in-out, float 6s ease-in-out infinite;
+}
+
+.sigil-top {
+  position: absolute;
+  top: -64px;
+  left: 50%;
+  width: 130px;
+  max-height: 110px;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: .92;
+  filter:
+    drop-shadow(0 0 10px rgba(255,157,245,.65))
+    drop-shadow(0 0 28px rgba(179,92,255,.45));
+  animation: floatSigilTop 4s ease-in-out infinite;
+}
+
+@keyframes floatSigilTop {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
+.sigil::after {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(179,92,255,.7);
+  clip-path: polygon(50% 0%, 100% 88%, 0% 88%);
+  filter: drop-shadow(0 0 16px var(--purple));
+}
+
+.sigil span {
+  font-family: Cinzel, serif;
+  font-size: 4.8rem;
+  z-index: 2;
+  text-shadow:
+    0 0 16px var(--pink),
+    0 0 44px var(--purple);
+}
+
+@keyframes pulse {
+  0%,100% {
+    box-shadow:
+      0 0 26px rgba(168,85,247,.36),
+      inset 0 0 25px rgba(255,157,245,.05);
+  }
+  50% {
+    box-shadow:
+      0 0 70px rgba(240,171,252,.56),
+      inset 0 0 44px rgba(179,92,255,.12);
+  }
+}
+
+@keyframes float {
+  50% { transform: translateY(-12px); }
+}
+
+h1, h2 {
+  font-family: Cinzel, serif;
+}
+
+.hero h1 {
+  font-family: Cinzel, serif;
+  font-size: clamp(4rem, 16vw, 10rem);
+  letter-spacing: .12em;
+  line-height: .85;
+  text-shadow:
+    0 0 14px rgba(255,157,245,.9),
+    0 0 45px rgba(179,92,255,.8),
+    0 0 90px rgba(255,61,129,.35);
+}
+
+.tagline {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.quote {
+  margin: 30px auto 0;
+  max-width: 720px;
+  font-family: Cinzel, serif;
+  font-size: clamp(1.18rem, 4vw, 2.05rem);
+  color: #ffe6ff;
+  text-shadow: 0 0 22px rgba(255,157,245,.55);
+}
+
+.choice {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.choice button:nth-child(2) {
+  opacity: .75;
+}
+
+.status-line {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: .95rem;
+  letter-spacing: .08em;
+  min-height: 1.4em;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(24,0,40,.88), rgba(8,0,14,.72));
+  border: 1px solid rgba(255,157,245,.24);
+  border-radius: 30px;
+  padding: 34px;
+  margin: 26px 0;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 40px rgba(0,0,0,.45),
+    inset 0 0 30px rgba(179,92,255,.06);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,157,245,.12), transparent);
+  transform: translateX(-120%);
+  transition: .8s ease;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  transform: translateX(120%);
+}
+
+.card h2 {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.65rem, 5vw, 2.25rem);
+  margin-bottom: 14px;
+  text-shadow: 0 0 18px rgba(179,92,255,.62);
+}
+
+.card p {
+  position: relative;
+  z-index: 1;
+  line-height: 1.8;
+  color: #eadcff;
+  max-width: 76ch;
+}
+
+.devotion-box {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,157,245,.22);
+  background: rgba(255,157,245,.055);
+  color: #ffe6ff;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: center;
+  box-shadow: inset 0 0 20px rgba(179,92,255,.08);
+}
+
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.link {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid rgba(255,157,245,.38);
+  background:
+    radial-gradient(circle at top, rgba(255,157,245,.25), transparent 45%),
+    linear-gradient(135deg, rgba(179,92,255,.35), rgba(55,0,90,.5));
+  color: var(--text);
+  border-radius: 18px;
+  padding: 18px 22px;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: .25s ease;
+  box-shadow: inset 0 0 20px rgba(255,255,255,.035);
+}
+
+.link::after {
+  content: "↗";
+  margin-left: 8px;
+  color: var(--pink);
+}
+
+.link:hover {
+  transform: translateY(-5px) scale(1.025);
+  box-shadow:
+    0 0 24px rgba(255,157,245,.45),
+    0 0 60px rgba(179,92,255,.25);
+}
+
+.gallery {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.frame {
+  min-height: 225px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,157,245,.28);
+  background:
+    linear-gradient(145deg, rgba(179,92,255,.28), rgba(0,0,0,.5)),
+    radial-gradient(circle at top, rgba(255,61,129,.28), transparent 50%);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  padding: 15px;
+  transition: .25s ease;
+  overflow: hidden;
+}
+
+.frame:hover {
+  transform: translateY(-6px) rotate(-1deg);
+  box-shadow: 0 0 35px rgba(255,157,245,.25);
+}
+
+.frame img {
+  width: 100%;
+  height: 100%;
+  min-height: 225px;
+  object-fit: cover;
+  border-radius: 24px;
+  display: block;
+}
+
+.whisper {
+  position: fixed;
+  pointer-events: none;
+  color: var(--pink);
+  text-shadow:
+    0 0 12px var(--purple),
+    0 0 28px rgba(255,61,129,.45);
+  font-size: .82rem;
+  opacity: 0;
+  animation: fadeWhisper 1.5s ease forwards;
+  z-index: 5;
+  letter-spacing: .08em;
+  text-transform: lowercase;
+}
+
+@keyframes fadeWhisper {
+  0% { opacity: .85; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(1.08); }
+}
+
+.sound-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-size: .78rem;
+}
+
+footer {
+  text-align: center;
+  color: rgba(243,232,255,.48);
+  padding: 38px 0 10px;
+  font-size: .9rem;
+  letter-spacing: .08em;
+}
+
+@media (max-width: 650px), (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+
+  .cursor {
+    display: none;
+  }
+
+  button, .mini-button {
+    cursor: pointer;
+  }
+
+  .hero {
+    min-height: 72vh;
+  }
+
+  .sigil {
+    width: 175px;
+    height: 175px;
+  }
+
+  .sigil span {
+    font-size: 3.5rem;
+  }
+
+  .sigil-top {
+    top: -48px;
+    width: 100px;
+    max-height: 86px;
+  }
+
+  .card {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .link {
+    padding: 16px 18px;
+  }
+
+  .sound-toggle {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="cursor" aria-hidden="true"></div>
+
+
+<section class="age-gate" id="ageGate" aria-labelledby="ageTitle">
+  <div class="age-box">
+    <h1 id="ageTitle">18+</h1>
+    <p>
+      This site is intended for adult audiences only.
+      Please confirm that you are 18 or older before entering.
+    </p>
+    <div class="age-buttons">
+      <button type="button" onclick="enterSite()">Yes, I am 18+</button>
+      <button type="button" onclick="leaveSite()">No</button>
+    </div>
+  </div>
+</section>
+
+<section class="gate" id="gate">
+  <div class="gate-box">
+    <h1>EVELYNN</h1>
+    <p id="gateLine">You found the gate.</p>
+    <div class="gate-actions">
+      <button type="button" onclick="enterGarden()">Enter the Garden</button>
+      <button type="button" onclick="toggleAmbience()">Sound</button>
+    </div>
+  </div>
+</section>
+
+<button class="sound-toggle" type="button" onclick="toggleAmbience()">Sound: Off</button>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-inner">
+      <!-- Change horns.png to your own file, like images/crown.png or images/halo.gif -->
+      <div class="sigil" aria-hidden="true">
+        <img class="sigil-top" src="horns.png" alt="">
+        <span>✦</span>
+      </div>
+      <h1>EVELYNN</h1>
+      <p class="tagline">demoness • goddess • devotion made digital</p>
+      <p class="quote" id="quote">“You came looking for a link. How adorable.”</p>
+
+      <div class="choice">
+        <button type="button" onclick="obey()">Obey</button>
+        <button type="button" onclick="leave()">Leave</button>
+      </div>
+
+      <p class="status-line" id="statusLine"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>The Garden</h2>
+    <p>
+      You have wandered into Evelynn’s domain, where velvet shadows bloom,
+      devotion is noticed, and curiosity is rarely accidental.
+    </p>
+    <div class="devotion-box" id="devotion">Devotion offered: 0</div>
+  </section>
+
+  <section class="card">
+    <h2>Tributes</h2>
+    <p>
+      A goddess accepts attention in many forms. Choose yours.
+    </p>
+    <div class="grid">
+      <a class="link" href="https://cash.app/%24EvelynnKelly" target="_blank" rel="noopener noreferrer">Cash App</a>
+      <a class="link" href="https://www.paypal.com/biz/profile/screambean" target="_blank" rel="noopener noreferrer">PayPal</a>
+      <a class="link" href="https://throne.com/goddessevelynnkelly" target="_blank" rel="noopener noreferrer">Throne</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Summon Her</h2>
+    <p>
+      Follow the trail, enter the circle, and behave accordingly.
+    </p>
+    <div class="grid">
+      <a class="link" href="https://x.com/evelynnkelly04" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+      <a class="link" href="https://bsky.app/profile/evelynnkelly.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+      <a class="link" href="https://discord.com/invite/f4uA5N4yu" target="_blank" rel="noopener noreferrer">Discord</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Relics</h2>
+    <p>
+      Place your favorite art, wallpapers, edits, or screenshots here.
+    </p>
+    <div class="gallery">
+      <div class="frame">Wallpaper 1<br>replace with image</div>
+      <div class="frame">Wallpaper 2<br>replace with image</div>
+      <div class="frame">Wallpaper 3<br>replace with image</div>
+      <div class="frame">Wallpaper 4<br>replace with image</div>
+    </div>
+  </section>
+
+  <footer>she sees you.</footer>
+</main>
+
+<!-- 
+  SOUND NOTE:
+  Put your own audio file in the same repo folder and name it ambience.mp3.
+  GitHub Pages will serve it reliably, unlike many hotlinked audio URLs.
+-->
+<audio id="ambience" loop preload="auto">
+  <source src="ambience.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const gate = document.getElementById("gate");
+const gateLine = document.getElementById("gateLine");
+const cursor = document.querySelector(".cursor");
+const statusLine = document.getElementById("statusLine");
+const devotionEl = document.getElementById("devotion");
+const ambience = document.getElementById("ambience");
+const soundToggle = document.querySelector(".sound-toggle");
+
+const ageGate = document.getElementById("ageGate");
+
+function enterSite() {
+  localStorage.setItem("evelynnAgeVerified", "true");
+  ageGate.classList.add("hidden");
+}
+
+function leaveSite() {
+  window.close();
+
+  setTimeout(() => {
+    window.location.href = "https://www.google.com";
+  }, 120);
+}
+
+if (localStorage.getItem("evelynnAgeVerified") === "true") {
+  ageGate.classList.add("hidden");
+}
+
+
+const gateLines = [
+  "You found the gate.",
+  "You were meant to be here.",
+  "You took your time.",
+  "Curiosity suits you.",
+  "The garden noticed you first."
+];
+
+const quotes = [
+  "“You came looking for a link. How adorable.”",
+  "“Devotion is prettier when it glows.”",
+  "“Careful. The garden remembers repeat visitors.”",
+  "“You may leave whenever you like. The thought will stay.”"
+];
+
+gateLine.textContent = randomFrom(gateLines);
+document.getElementById("quote").textContent = randomFrom(quotes);
+
+function randomFrom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function enterGarden() {
+  gate.classList.add("hidden");
+}
+
+let devotion = Number(localStorage.getItem("evelynnDevotion") || 0);
+updateDevotion();
+
+function updateDevotion() {
+  devotionEl.textContent = "Devotion offered: " + devotion;
+}
+
+function addDevotion() {
+  devotion += 1;
+  localStorage.setItem("evelynnDevotion", devotion);
+  updateDevotion();
+}
+
+function obey() {
+  document.body.classList.remove("left");
+  document.body.classList.add("obeyed");
+  statusLine.textContent = "Good choice.";
+  addDevotion();
+  burstWhispers(window.innerWidth / 2, window.innerHeight / 2, ["good", "closer", "noticed", "devotion"]);
+}
+
+function leave() {
+  document.body.classList.remove("obeyed");
+  document.body.classList.add("left");
+  statusLine.textContent = "You'll be back.";
+  addDevotion();
+  burstWhispers(window.innerWidth / 2, window.innerHeight / 2, ["again", "soon", "remember", "garden"]);
+}
+
+let soundOn = false;
+
+function toggleAmbience() {
+  if (!soundOn) {
+    ambience.volume = 0.22;
+
+    ambience.play()
+      .then(() => {
+        soundOn = true;
+        soundToggle.textContent = "Sound: On";
+      })
+      .catch(() => {
+        soundOn = false;
+        soundToggle.textContent = "Add ambience.mp3";
+        statusLine.textContent = "Sound needs an ambience.mp3 file in your repo.";
+      });
+  } else {
+    ambience.pause();
+    soundOn = false;
+    soundToggle.textContent = "Sound: Off";
+  }
+}
+
+/* smoother custom mouse */
+let mouseX = -50;
+let mouseY = -50;
+let cursorX = -50;
+let cursorY = -50;
+let lastTrailTime = 0;
+
+document.addEventListener("mousemove", event => {
+  mouseX = event.clientX;
+  mouseY = event.clientY;
+
+  if (window.innerWidth > 650 && event.timeStamp - lastTrailTime > 42) {
+    lastTrailTime = event.timeStamp;
+    makeTrail(event.clientX, event.clientY);
+  }
+
+  if (window.innerWidth > 650 && Math.random() > 0.975) {
+    makeWhisper(event.clientX + 14, event.clientY + 14, randomFrom([
+      "closer", "worthy?", "stay", "noticed", "devotion", "again", "garden"
+    ]));
+  }
+});
+
+function animateCursor() {
+  cursorX += (mouseX - cursorX) * 0.24;
+  cursorY += (mouseY - cursorY) * 0.24;
+
+  if (cursor) {
+    cursor.style.transform = "translate(" + cursorX + "px, " + cursorY + "px) translate(-50%, -50%)";
+  }
+
+  requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
+
+function makeTrail(x, y) {
+  const trail = document.createElement("div");
+  trail.className = "trail";
+  trail.style.left = x + "px";
+  trail.style.top = y + "px";
+  document.body.appendChild(trail);
+  setTimeout(() => trail.remove(), 520);
+}
+
+document.querySelectorAll(".link").forEach(link => {
+  link.addEventListener("mouseenter", () => {
+    const rect = link.getBoundingClientRect();
+    makeWhisper(rect.left + 20, rect.top - 18, randomFrom([
+      "choose", "click it", "don’t hesitate", "good choice", "noticed"
+    ]));
+  });
+
+  link.addEventListener("click", addDevotion);
+});
+
+function makeWhisper(x, y, text) {
+  const whisper = document.createElement("div");
+  whisper.className = "whisper";
+  whisper.textContent = text;
+  whisper.style.left = x + "px";
+  whisper.style.top = y + "px";
+  document.body.appendChild(whisper);
+  setTimeout(() => whisper.remove(), 1500);
+}
+
+function burstWhispers(x, y, words) {
+  words.forEach((word, index) => {
+    setTimeout(() => {
+      makeWhisper(
+        x + (Math.random() * 180 - 90),
+        y + (Math.random() * 120 - 60),
+        word
+      );
+    }, index * 120);
+  });
+}
+</script>
+</body>
+</html>
