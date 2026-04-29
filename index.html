@@ -1,325 +1,532 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Evelynn's Garden</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evelynn's Garden</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-<style>
-:root {
-  --bg: #050006;
-  --panel: rgba(18, 0, 28, .72);
-  --purple: #a855f7;
-  --violet: #6d28d9;
-  --pink: #f0abfc;
-  --text: #f3e8ff;
-  --muted: #c4b5fd;
-}
+  <style>
+    :root {
+      --bg: #030006;
+      --panel: rgba(18, 0, 28, .78);
+      --purple: #b35cff;
+      --violet: #6d28d9;
+      --pink: #ff9df5;
+      --red: #ff3d81;
+      --text: #fff4ff;
+      --muted: #d8b4fe;
+      --dark: #07000c;
+    }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(168,85,247,.35), transparent 35%),
-    radial-gradient(circle at bottom, rgba(88,28,135,.35), transparent 35%),
-    #050006;
-  color: var(--text);
-  font-family: Inter, sans-serif;
-  overflow-x: hidden;
-  cursor: none;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(circle, black, transparent 75%);
-  pointer-events: none;
-}
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,61,129,.22), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(179,92,255,.32), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(109,40,217,.35), transparent 36%),
+        #030006;
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
 
-.cursor {
-  position: fixed;
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--pink);
-  border-radius: 50%;
-  box-shadow: 0 0 18px var(--purple);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle, black, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.gate {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle, #1b0030, #020003 70%);
-  display: grid;
-  place-items: center;
-  z-index: 20;
-  transition: opacity .8s ease, visibility .8s ease;
-}
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      background:
+        conic-gradient(from 180deg, transparent, rgba(179,92,255,.08), transparent, rgba(255,61,129,.08), transparent);
+      animation: abyssSpin 18s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.gate.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
+    @keyframes abyssSpin {
+      to { transform: rotate(360deg); }
+    }
 
-.gate-box {
-  text-align: center;
-  padding: 35px;
-  max-width: 520px;
-}
+    .cursor {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--pink);
+      border-radius: 50%;
+      box-shadow: 0 0 18px var(--purple), 0 0 38px rgba(255,157,245,.35);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+    }
 
-.gate h1 {
-  font-family: Cinzel, serif;
-  font-size: clamp(2.4rem, 9vw, 5rem);
-  text-shadow: 0 0 30px var(--purple);
-}
+    .cursor-dot {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--pink);
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px var(--pink);
+    }
 
-.gate p {
-  color: var(--muted);
-  margin: 18px 0 28px;
-}
+    .gate {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top, rgba(179,92,255,.32), transparent 38%),
+        radial-gradient(circle at bottom, rgba(255,61,129,.18), transparent 42%),
+        #020003;
+      display: grid;
+      place-items: center;
+      z-index: 20;
+      transition: opacity .8s ease, visibility .8s ease;
+    }
 
-button, .link {
-  border: 1px solid rgba(240,171,252,.35);
-  background: linear-gradient(135deg, rgba(168,85,247,.28), rgba(76,29,149,.35));
-  color: var(--text);
-  border-radius: 999px;
-  padding: 13px 22px;
-  text-decoration: none;
-  font-weight: 600;
-  letter-spacing: .04em;
-  transition: .25s ease;
-  box-shadow: 0 0 22px rgba(168,85,247,.18);
-}
+    .gate.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
 
-button:hover, .link:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 28px rgba(240,171,252,.42);
-}
+    .gate-box {
+      text-align: center;
+      padding: 35px;
+      max-width: 560px;
+      position: relative;
+    }
 
-.wrap {
-  width: min(980px, 92%);
-  margin: auto;
-  padding: 70px 0;
-  position: relative;
-  z-index: 2;
-}
+    .gate-mark {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,157,245,.45);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 45px rgba(179,92,255,.35);
+      animation: pulse 3.5s infinite ease-in-out;
+    }
 
-.hero {
-  text-align: center;
-  padding: 60px 0 35px;
-}
+    .gate-mark span {
+      font-family: Cinzel, serif;
+      font-size: 3.6rem;
+      text-shadow: 0 0 25px var(--pink);
+    }
 
-.sigil {
-  width: 190px;
-  height: 190px;
-  margin: 0 auto 24px;
-  border-radius: 50%;
-  border: 1px solid rgba(240,171,252,.4);
-  display: grid;
-  place-items: center;
-  position: relative;
-  animation: pulse 4s infinite ease-in-out;
-}
+    .gate h1 {
+      font-family: Cinzel, serif;
+      font-size: clamp(2.6rem, 11vw, 5.6rem);
+      letter-spacing: .16em;
+      text-shadow:
+        0 0 14px rgba(255,157,245,.9),
+        0 0 45px rgba(179,92,255,.8),
+        0 0 90px rgba(255,61,129,.35);
+    }
 
-.sigil::before, .sigil::after {
-  content: "";
-  position: absolute;
-  inset: 18px;
-  border: 1px solid rgba(168,85,247,.45);
-  transform: rotate(45deg);
-}
+    .gate p {
+      color: var(--muted);
+      margin: 18px 0 30px;
+      line-height: 1.7;
+    }
 
-.sigil span {
-  font-family: Cinzel, serif;
-  font-size: 4rem;
-  text-shadow: 0 0 25px var(--pink);
-}
+    button, .link {
+      border: 1px solid rgba(255,157,245,.38);
+      background:
+        radial-gradient(circle at top, rgba(255,157,245,.25), transparent 45%),
+        linear-gradient(135deg, rgba(179,92,255,.35), rgba(55,0,90,.5));
+      color: var(--text);
+      border-radius: 999px;
+      padding: 14px 24px;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: .25s ease;
+      box-shadow: 0 0 22px rgba(168,85,247,.18);
+      font-family: Inter, sans-serif;
+    }
 
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 25px rgba(168,85,247,.35); }
-  50% { box-shadow: 0 0 65px rgba(240,171,252,.55); }
-}
+    button:hover, .link:hover {
+      transform: translateY(-5px) scale(1.025);
+      box-shadow:
+        0 0 24px rgba(255,157,245,.45),
+        0 0 60px rgba(179,92,255,.25);
+    }
 
-h1, h2 {
-  font-family: Cinzel, serif;
-}
+    .wrap {
+      width: min(1050px, 92%);
+      margin: auto;
+      padding: 70px 0;
+      position: relative;
+      z-index: 2;
+    }
 
-.hero h1 {
-  font-size: clamp(3rem, 10vw, 6rem);
-  letter-spacing: .08em;
-  text-shadow: 0 0 30px rgba(168,85,247,.8);
-}
+    .hero {
+      min-height: 78vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 60px 0;
+    }
 
-.tagline {
-  color: var(--muted);
-  margin-top: 12px;
-  font-size: 1.05rem;
-}
+    .hero-inner {
+      position: relative;
+    }
 
-.card {
-  background: var(--panel);
-  border: 1px solid rgba(240,171,252,.18);
-  border-radius: 26px;
-  padding: 28px;
-  margin: 22px 0;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 0 40px rgba(0,0,0,.35);
-}
+    .sigil {
+      width: 230px;
+      height: 230px;
+      margin: 0 auto 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,157,245,.5);
+      display: grid;
+      place-items: center;
+      position: relative;
+      animation: pulse 3.5s infinite ease-in-out, float 6s ease-in-out infinite;
+    }
 
-.card p {
-  line-height: 1.8;
-  color: #eadcff;
-}
+    .sigil::before {
+      content: "horns";
+      position: absolute;
+      top: -35px;
+      font-family: Cinzel, serif;
+      color: rgba(255,157,245,.55);
+      letter-spacing: .6em;
+      text-transform: uppercase;
+      text-indent: .6em;
+      font-size: .8rem;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 14px;
-  margin-top: 18px;
-}
+    .sigil::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border: 1px solid rgba(179,92,255,.7);
+      clip-path: polygon(50% 0%, 100% 88%, 0% 88%);
+      filter: drop-shadow(0 0 16px var(--purple));
+    }
 
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-  margin-top: 18px;
-}
+    .sigil span {
+      font-family: Cinzel, serif;
+      font-size: 4.5rem;
+      z-index: 2;
+      text-shadow: 0 0 28px var(--pink);
+    }
 
-.frame {
-  min-height: 180px;
-  border-radius: 22px;
-  border: 1px solid rgba(240,171,252,.2);
-  background:
-    linear-gradient(135deg, rgba(168,85,247,.22), rgba(0,0,0,.4)),
-    radial-gradient(circle at top, rgba(240,171,252,.25), transparent 45%);
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  text-align: center;
-  padding: 15px;
-}
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 25px rgba(168,85,247,.35); }
+      50% { box-shadow: 0 0 75px rgba(240,171,252,.58); }
+    }
 
-.whisper {
-  position: fixed;
-  pointer-events: none;
-  color: var(--pink);
-  text-shadow: 0 0 12px var(--purple);
-  font-size: .8rem;
-  opacity: 0;
-  animation: fadeWhisper 1.5s ease forwards;
-  z-index: 5;
-}
+    @keyframes float {
+      50% { transform: translateY(-12px); }
+    }
 
-@keyframes fadeWhisper {
-  0% { opacity: .8; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-28px); }
-}
+    h1, h2, h3 {
+      font-family: Cinzel, serif;
+    }
 
-footer {
-  text-align: center;
-  color: rgba(243,232,255,.45);
-  padding: 35px 0 10px;
-  font-size: .85rem;
-}
+    .hero h1 {
+      font-size: clamp(4rem, 16vw, 10rem);
+      letter-spacing: .12em;
+      line-height: .85;
+      text-shadow:
+        0 0 14px rgba(255,157,245,.9),
+        0 0 45px rgba(179,92,255,.8),
+        0 0 90px rgba(255,61,129,.35);
+    }
 
-@media (max-width: 650px) {
-  body { cursor: auto; }
-  .cursor { display: none; }
-  .card { padding: 22px; }
-}
-</style>
+    .tagline {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: clamp(1rem, 3vw, 1.35rem);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .quote {
+      margin: 28px auto 0;
+      max-width: 680px;
+      font-family: Cinzel, serif;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      color: #ffe6ff;
+      text-shadow: 0 0 22px rgba(255,157,245,.55);
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(24,0,40,.88), rgba(8,0,14,.72));
+      border: 1px solid rgba(255,157,245,.24);
+      border-radius: 30px;
+      padding: 34px;
+      margin: 26px 0;
+      backdrop-filter: blur(18px);
+      box-shadow:
+        0 0 40px rgba(0,0,0,.45),
+        inset 0 0 30px rgba(179,92,255,.06);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,157,245,.12), transparent);
+      transform: translateX(-120%);
+      transition: .8s ease;
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      transform: translateX(120%);
+    }
+
+    .card h2 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      margin-bottom: 14px;
+      text-shadow: 0 0 18px rgba(179,92,255,.6);
+    }
+
+    .card p {
+      line-height: 1.85;
+      color: #eadcff;
+      max-width: 760px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .stat-box {
+      border: 1px solid rgba(255,157,245,.22);
+      border-radius: 24px;
+      padding: 24px;
+      background: rgba(0,0,0,.2);
+    }
+
+    .stat-box strong {
+      display: block;
+      font-family: Cinzel, serif;
+      font-size: 1.4rem;
+      color: #ffe6ff;
+      margin-bottom: 9px;
+      text-shadow: 0 0 18px rgba(255,157,245,.45);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .link {
+      display: grid;
+      place-items: center;
+      min-height: 68px;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .frame {
+      min-height: 220px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,157,245,.28);
+      background:
+        linear-gradient(145deg, rgba(179,92,255,.28), rgba(0,0,0,.5)),
+        radial-gradient(circle at top, rgba(255,61,129,.28), transparent 50%);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      padding: 15px;
+      transition: .25s ease;
+      overflow: hidden;
+    }
+
+    .frame:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      box-shadow: 0 0 35px rgba(255,157,245,.25);
+    }
+
+    .frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 22px;
+      display: block;
+    }
+
+    .whisper {
+      position: fixed;
+      pointer-events: none;
+      color: var(--pink);
+      text-shadow: 0 0 12px var(--purple);
+      font-size: .8rem;
+      opacity: 0;
+      animation: fadeWhisper 1.5s ease forwards;
+      z-index: 5;
+    }
+
+    @keyframes fadeWhisper {
+      0% { opacity: .82; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-28px); }
+    }
+
+    footer {
+      text-align: center;
+      color: rgba(243,232,255,.45);
+      padding: 35px 0 10px;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 760px) {
+      body { cursor: auto; }
+      .cursor, .cursor-dot { display: none; }
+      .hero { min-height: auto; padding-top: 30px; }
+      .sigil { width: 180px; height: 180px; }
+      .split { grid-template-columns: 1fr; }
+      .card { padding: 24px; }
+      .link { min-height: 62px; }
+    }
+  </style>
 </head>
 
 <body>
-<div class="cursor"></div>
+  <div class="cursor"></div>
+  <div class="cursor-dot"></div>
 
-<section class="gate" id="gate">
-  <div class="gate-box">
-    <h1>EVELYNN</h1>
-    <p>You found the gate. Step carefully.</p>
-    <button onclick="enterGarden()">Enter the Garden</button>
-  </div>
-</section>
-
-<main class="wrap">
-  <section class="hero">
-    <div class="sigil"><span>✦</span></div>
-    <h1>EVELYNN</h1>
-    <p class="tagline">demoness • goddess • purple-lit temptation</p>
-  </section>
-
-  <section class="card">
-    <h2>The Garden</h2>
-    <p>
-      You have wandered into Evelynn’s domain, where velvet shadows bloom,
-      devotion is noticed, and curiosity is rarely accidental.
-    </p>
-  </section>
-
-  <section class="card">
-    <h2>Offerings</h2>
-    <div class="grid">
-      <a class="link" href="https://cash.app/%24EvelynnKelly" target="_blank">Cash App</a>
-      <a class="link" href="https://www.paypal.com/biz/profile/screambean" target="_blank">PayPal</a>
-      <a class="link" href="https://throne.com/goddessevelynnkelly" target="_blank">Throne</a>
+  <section class="gate" id="gate">
+    <div class="gate-box">
+      <div class="gate-mark"><span>✦</span></div>
+      <h1>EVELYNN</h1>
+      <p>You found the gate. Step carefully. The garden notices who lingers.</p>
+      <button onclick="enterGarden()">Enter the Garden</button>
     </div>
   </section>
 
-  <section class="card">
-    <h2>Her Links</h2>
-    <div class="grid">
-      <a class="link" href="https://x.com/evelynnkelly04" target="_blank">Twitter / X</a>
-      <a class="link" href="https://bsky.app/profile/evelynnkelly.bsky.social" target="_blank">Bluesky</a>
-      <a class="link" href="https://discord.com/invite/f4uA5N4yu" target="_blank">Discord</a>
-    </div>
-  </section>
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="sigil"><span>✦</span></div>
+        <h1>EVELYNN</h1>
+        <p class="tagline">demoness • goddess • devotion made digital</p>
+        <p class="quote">“You came looking for a link. How adorable.”</p>
+      </div>
+    </section>
 
-  <section class="card">
-    <h2>Wallpapers & Relics</h2>
-    <div class="gallery">
-      <div class="frame">Wallpaper 1<br>replace with image</div>
-      <div class="frame">Wallpaper 2<br>replace with image</div>
-      <div class="frame">Wallpaper 3<br>replace with image</div>
-      <div class="frame">Wallpaper 4<br>replace with image</div>
-    </div>
-  </section>
+    <section class="card split">
+      <div>
+        <h2>The Garden</h2>
+        <p>
+          You have wandered into Evelynn’s domain, where velvet shadows bloom,
+          devotion is noticed, and curiosity is rarely accidental.
+        </p>
+      </div>
+      <div class="stat-box">
+        <strong>Rule of the Garden</strong>
+        <p>Admire. Obey the pull. Leave a tribute if the spell worked.</p>
+      </div>
+    </section>
 
-  <footer>she sees you.</footer>
-</main>
+    <section class="card">
+      <h2>Tributes</h2>
+      <p>For those who know that worship is prettier when it leaves a receipt.</p>
+      <div class="grid">
+        <a class="link" href="https://cash.app/%24EvelynnKelly" target="_blank" rel="noopener noreferrer">Cash App</a>
+        <a class="link" href="https://www.paypal.com/biz/profile/screambean" target="_blank" rel="noopener noreferrer">PayPal</a>
+        <a class="link" href="https://throne.com/goddessevelynnkelly" target="_blank" rel="noopener noreferrer">Throne</a>
+      </div>
+    </section>
 
-<script>
-const gate = document.getElementById("gate");
-const cursor = document.querySelector(".cursor");
+    <section class="card">
+      <h2>Summon Her</h2>
+      <p>Follow the smoke trail. The abyss has notifications enabled.</p>
+      <div class="grid">
+        <a class="link" href="https://x.com/evelynnkelly04" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+        <a class="link" href="https://bsky.app/profile/evelynnkelly.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+        <a class="link" href="https://discord.com/invite/f4uA5N4yu" target="_blank" rel="noopener noreferrer">Discord</a>
+      </div>
+    </section>
 
-function enterGarden() {
-  gate.classList.add("hidden");
-}
+    <section class="card">
+      <h2>Wallpapers & Relics</h2>
+      <p>Replace these panels with images, edits, screenshots, or favorite posts.</p>
+      <div class="gallery">
+        <div class="frame">Wallpaper 1<br>replace with image</div>
+        <div class="frame">Wallpaper 2<br>replace with image</div>
+        <div class="frame">Wallpaper 3<br>replace with image</div>
+        <div class="frame">Wallpaper 4<br>replace with image</div>
+      </div>
+    </section>
 
-document.addEventListener("mousemove", e => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top = e.clientY + "px";
+    <footer>she sees you</footer>
+  </main>
 
-  if (Math.random() > 0.94) {
-    const words = ["closer", "worthy?", "stay", "noticed", "devotion"];
-    const w = document.createElement("div");
-    w.className = "whisper";
-    w.textContent = words[Math.floor(Math.random() * words.length)];
-    w.style.left = e.clientX + 12 + "px";
-    w.style.top = e.clientY + 12 + "px";
-    document.body.appendChild(w);
-    setTimeout(() => w.remove(), 1500);
-  }
-});
-</script>
+  <script>
+    const gate = document.getElementById("gate");
+    const cursor = document.querySelector(".cursor");
+    const dot = document.querySelector(".cursor-dot");
+
+    function enterGarden() {
+      gate.classList.add("hidden");
+    }
+
+    document.addEventListener("mousemove", event => {
+      cursor.style.left = event.clientX + "px";
+      cursor.style.top = event.clientY + "px";
+      dot.style.left = event.clientX + "px";
+      dot.style.top = event.clientY + "px";
+
+      if (Math.random() > 0.945) {
+        const words = ["closer", "worthy?", "stay", "noticed", "devotion", "tribute", "again"];
+        const whisper = document.createElement("div");
+        whisper.className = "whisper";
+        whisper.textContent = words[Math.floor(Math.random() * words.length)];
+        whisper.style.left = event.clientX + 14 + "px";
+        whisper.style.top = event.clientY + 14 + "px";
+        document.body.appendChild(whisper);
+        setTimeout(() => whisper.remove(), 1500);
+      }
+    });
+  </script>
 </body>
 </html>
