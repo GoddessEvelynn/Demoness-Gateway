@@ -11,7 +11,7 @@
 <style>
 :root {
   --bg: #030006;
-  --panel: rgba(18, 0, 28, .78);
+  --panel: rgba(18, 0, 28, .80);
   --purple: #b35cff;
   --violet: #6d28d9;
   --pink: #ff9df5;
@@ -42,6 +42,15 @@ body {
   font-family: Inter, sans-serif;
   overflow-x: hidden;
   cursor: none;
+  animation: breathe 11s ease-in-out infinite;
+}
+
+body.obeyed {
+  filter: brightness(1.18) contrast(1.1) saturate(1.18);
+}
+
+body.left {
+  filter: grayscale(.7) brightness(.75);
 }
 
 body::before {
@@ -75,6 +84,11 @@ body::after {
   z-index: 0;
 }
 
+@keyframes breathe {
+  0%, 100% { background-size: 100% 100%; }
+  50% { background-size: 112% 112%; }
+}
+
 @keyframes abyssSpin {
   to { transform: rotate(360deg); }
 }
@@ -106,6 +120,26 @@ a, button {
   box-shadow: 0 0 16px var(--pink);
 }
 
+.trail {
+  position: fixed;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pink);
+  pointer-events: none;
+  opacity: .65;
+  z-index: 9998;
+  box-shadow: 0 0 14px var(--pink);
+  animation: trailFade .45s ease forwards;
+}
+
+@keyframes trailFade {
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
 .gate {
   position: fixed;
   inset: 0;
@@ -124,7 +158,7 @@ a, button {
 }
 
 .gate-box {
-  width: min(560px, 92%);
+  width: min(580px, 92%);
   text-align: center;
   padding: 42px 28px;
   border: 1px solid rgba(255,157,245,.25);
@@ -149,9 +183,17 @@ a, button {
   color: var(--muted);
   margin: 18px 0 30px;
   letter-spacing: .08em;
+  min-height: 1.5em;
 }
 
-.gate button {
+.gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+button, .mini-button {
   border: 1px solid rgba(240,171,252,.38);
   background:
     radial-gradient(circle at top, rgba(255,157,245,.22), transparent 44%),
@@ -167,7 +209,7 @@ a, button {
   cursor: none;
 }
 
-.gate button:hover {
+button:hover, .mini-button:hover {
   transform: translateY(-4px) scale(1.03);
   box-shadow:
     0 0 26px rgba(240,171,252,.46),
@@ -284,6 +326,26 @@ h1, h2 {
   text-shadow: 0 0 22px rgba(255,157,245,.55);
 }
 
+.choice {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.choice button:nth-child(2) {
+  opacity: .75;
+}
+
+.status-line {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: .95rem;
+  letter-spacing: .08em;
+  min-height: 1.4em;
+}
+
 .card {
   position: relative;
   overflow: hidden;
@@ -326,6 +388,20 @@ h1, h2 {
   line-height: 1.8;
   color: #eadcff;
   max-width: 76ch;
+}
+
+.devotion-box {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,157,245,.22);
+  background: rgba(255,157,245,.055);
+  color: #ffe6ff;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: center;
+  box-shadow: inset 0 0 20px rgba(179,92,255,.08);
 }
 
 .grid {
@@ -428,6 +504,16 @@ h1, h2 {
   100% { opacity: 0; transform: translateY(-30px) scale(1.08); }
 }
 
+.sound-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-size: .78rem;
+}
+
 footer {
   text-align: center;
   color: rgba(243,232,255,.48);
@@ -445,7 +531,7 @@ footer {
     display: none;
   }
 
-  .gate button {
+  button, .mini-button {
     cursor: pointer;
   }
 
@@ -470,6 +556,11 @@ footer {
   .link {
     padding: 16px 18px;
   }
+
+  .sound-toggle {
+    right: 12px;
+    bottom: 12px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -487,10 +578,15 @@ footer {
 <section class="gate" id="gate">
   <div class="gate-box">
     <h1>EVELYNN</h1>
-    <p>You found the gate. Step carefully.</p>
-    <button type="button" onclick="enterGarden()">Enter the Garden</button>
+    <p id="gateLine">You found the gate.</p>
+    <div class="gate-actions">
+      <button type="button" onclick="enterGarden()">Enter the Garden</button>
+      <button type="button" onclick="toggleAmbience()">Sound</button>
+    </div>
   </div>
 </section>
+
+<button class="sound-toggle" type="button" onclick="toggleAmbience()">Sound: Off</button>
 
 <main class="wrap">
   <section class="hero">
@@ -498,7 +594,14 @@ footer {
       <div class="sigil" aria-hidden="true"><span>✦</span></div>
       <h1>EVELYNN</h1>
       <p class="tagline">demoness • goddess • devotion made digital</p>
-      <p class="quote">“You came looking for a link. How adorable.”</p>
+      <p class="quote" id="quote">“You came looking for a link. How adorable.”</p>
+
+      <div class="choice">
+        <button type="button" onclick="obey()">Obey</button>
+        <button type="button" onclick="leave()">Leave</button>
+      </div>
+
+      <p class="status-line" id="statusLine"></p>
     </div>
   </section>
 
@@ -508,6 +611,7 @@ footer {
       You have wandered into Evelynn’s domain, where velvet shadows bloom,
       devotion is noticed, and curiosity is rarely accidental.
     </p>
+    <div class="devotion-box" id="devotion">Devotion offered: 0</div>
   </section>
 
   <section class="card">
@@ -550,37 +654,160 @@ footer {
   <footer>she sees you.</footer>
 </main>
 
+<audio id="ambience" loop preload="none">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5d5c2d5b4f.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 const gate = document.getElementById("gate");
+const gateLine = document.getElementById("gateLine");
 const cursor = document.querySelector(".cursor");
+const statusLine = document.getElementById("statusLine");
+const devotionEl = document.getElementById("devotion");
+const ambience = document.getElementById("ambience");
+const soundToggle = document.querySelector(".sound-toggle");
+
+const gateLines = [
+  "You found the gate.",
+  "You were meant to be here.",
+  "You took your time.",
+  "Curiosity suits you.",
+  "The garden noticed you first."
+];
+
+const quotes = [
+  "“You came looking for a link. How adorable.”",
+  "“Devotion is prettier when it glows.”",
+  "“Careful. The garden remembers repeat visitors.”",
+  "“You may leave whenever you like. The thought will stay.”"
+];
+
+gateLine.textContent = randomFrom(gateLines);
+document.getElementById("quote").textContent = randomFrom(quotes);
+
+function randomFrom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
 
 function enterGarden() {
   gate.classList.add("hidden");
   localStorage.setItem("evelynnGateEntered", "true");
+  tryPlayAmbience();
 }
 
 if (localStorage.getItem("evelynnGateEntered") === "true") {
   gate.classList.add("hidden");
 }
 
+let devotion = Number(localStorage.getItem("evelynnDevotion") || 0);
+updateDevotion();
+
+function updateDevotion() {
+  devotionEl.textContent = "Devotion offered: " + devotion;
+}
+
+function addDevotion() {
+  devotion += 1;
+  localStorage.setItem("evelynnDevotion", devotion);
+  updateDevotion();
+}
+
+function obey() {
+  document.body.classList.remove("left");
+  document.body.classList.add("obeyed");
+  statusLine.textContent = "Good choice.";
+  devotion += 3;
+  localStorage.setItem("evelynnDevotion", devotion);
+  updateDevotion();
+  burstWhispers(window.innerWidth / 2, window.innerHeight / 2, ["good", "closer", "noticed", "devotion"]);
+}
+
+function leave() {
+  document.body.classList.remove("obeyed");
+  document.body.classList.add("left");
+  statusLine.textContent = "You'll be back.";
+  burstWhispers(window.innerWidth / 2, window.innerHeight / 2, ["again", "soon", "remember", "garden"]);
+}
+
+let soundOn = false;
+
+function toggleAmbience() {
+  if (!soundOn) {
+    tryPlayAmbience();
+  } else {
+    ambience.pause();
+    soundOn = false;
+    soundToggle.textContent = "Sound: Off";
+  }
+}
+
+function tryPlayAmbience() {
+  ambience.volume = 0.22;
+  ambience.play()
+    .then(() => {
+      soundOn = true;
+      soundToggle.textContent = "Sound: On";
+    })
+    .catch(() => {
+      soundOn = false;
+      soundToggle.textContent = "Sound: Off";
+    });
+}
+
 document.addEventListener("mousemove", event => {
-  if (!cursor) return;
+  if (cursor) {
+    cursor.style.left = event.clientX + "px";
+    cursor.style.top = event.clientY + "px";
+  }
 
-  cursor.style.left = event.clientX + "px";
-  cursor.style.top = event.clientY + "px";
+  if (window.innerWidth > 650) {
+    const trail = document.createElement("div");
+    trail.className = "trail";
+    trail.style.left = event.clientX + "px";
+    trail.style.top = event.clientY + "px";
+    document.body.appendChild(trail);
+    setTimeout(() => trail.remove(), 450);
 
-  if (window.innerWidth > 650 && Math.random() > 0.945) {
-    const words = ["closer", "worthy?", "stay", "noticed", "devotion", "again", "mine"];
-    const whisper = document.createElement("div");
-    whisper.className = "whisper";
-    whisper.textContent = words[Math.floor(Math.random() * words.length)];
-    whisper.style.left = event.clientX + 14 + "px";
-    whisper.style.top = event.clientY + 14 + "px";
-    document.body.appendChild(whisper);
-
-    setTimeout(() => whisper.remove(), 1500);
+    if (Math.random() > 0.955) {
+      makeWhisper(event.clientX + 14, event.clientY + 14, randomFrom([
+        "closer", "worthy?", "stay", "noticed", "devotion", "again", "garden"
+      ]));
+    }
   }
 });
+
+document.querySelectorAll(".link").forEach(link => {
+  link.addEventListener("mouseenter", () => {
+    const rect = link.getBoundingClientRect();
+    makeWhisper(rect.left + 20, rect.top - 18, randomFrom([
+      "choose", "click it", "don’t hesitate", "good choice", "noticed"
+    ]));
+  });
+
+  link.addEventListener("click", addDevotion);
+});
+
+function makeWhisper(x, y, text) {
+  const whisper = document.createElement("div");
+  whisper.className = "whisper";
+  whisper.textContent = text;
+  whisper.style.left = x + "px";
+  whisper.style.top = y + "px";
+  document.body.appendChild(whisper);
+  setTimeout(() => whisper.remove(), 1500);
+}
+
+function burstWhispers(x, y, words) {
+  words.forEach((word, index) => {
+    setTimeout(() => {
+      makeWhisper(
+        x + (Math.random() * 180 - 90),
+        y + (Math.random() * 120 - 60),
+        word
+      );
+    }, index * 120);
+  });
+}
 </script>
 </body>
 </html>
