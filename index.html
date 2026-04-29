@@ -1,532 +1,586 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evelynn's Garden</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<title>Evelynn's Garden</title>
 
-  <style>
-    :root {
-      --bg: #030006;
-      --panel: rgba(18, 0, 28, .78);
-      --purple: #b35cff;
-      --violet: #6d28d9;
-      --pink: #ff9df5;
-      --red: #ff3d81;
-      --text: #fff4ff;
-      --muted: #d8b4fe;
-      --dark: #07000c;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+:root {
+  --bg: #030006;
+  --panel: rgba(18, 0, 28, .78);
+  --purple: #b35cff;
+  --violet: #6d28d9;
+  --pink: #ff9df5;
+  --red: #ff3d81;
+  --text: #fff4ff;
+  --muted: #d8b4fe;
+  --shadow: rgba(179, 92, 255, .45);
+}
 
-    html {
-      scroll-behavior: smooth;
-    }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(255,61,129,.22), transparent 28%),
-        radial-gradient(circle at 80% 20%, rgba(179,92,255,.32), transparent 30%),
-        radial-gradient(circle at 50% 90%, rgba(109,40,217,.35), transparent 36%),
-        #030006;
-      color: var(--text);
-      font-family: Inter, sans-serif;
-      overflow-x: hidden;
-      cursor: none;
-    }
+html {
+  scroll-behavior: smooth;
+}
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: radial-gradient(circle, black, transparent 75%);
-      pointer-events: none;
-      z-index: 0;
-    }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,61,129,.22), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(179,92,255,.32), transparent 30%),
+    radial-gradient(circle at 50% 90%, rgba(109,40,217,.35), transparent 36%),
+    #030006;
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-    body::after {
-      content: "";
-      position: fixed;
-      inset: -20%;
-      background:
-        conic-gradient(from 180deg, transparent, rgba(179,92,255,.08), transparent, rgba(255,61,129,.08), transparent);
-      animation: abyssSpin 18s linear infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(circle, black, transparent 74%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-    @keyframes abyssSpin {
-      to { transform: rotate(360deg); }
-    }
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    conic-gradient(
+      from 180deg,
+      transparent,
+      rgba(179,92,255,.08),
+      transparent,
+      rgba(255,61,129,.08),
+      transparent
+    );
+  animation: abyssSpin 18s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .cursor {
-      position: fixed;
-      width: 18px;
-      height: 18px;
-      border: 1px solid var(--pink);
-      border-radius: 50%;
-      box-shadow: 0 0 18px var(--purple), 0 0 38px rgba(255,157,245,.35);
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: screen;
-    }
+@keyframes abyssSpin {
+  to { transform: rotate(360deg); }
+}
 
-    .cursor-dot {
-      position: fixed;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--pink);
-      pointer-events: none;
-      z-index: 10000;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 12px var(--pink);
-    }
+a, button {
+  font: inherit;
+}
 
-    .gate {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at top, rgba(179,92,255,.32), transparent 38%),
-        radial-gradient(circle at bottom, rgba(255,61,129,.18), transparent 42%),
-        #020003;
-      display: grid;
-      place-items: center;
-      z-index: 20;
-      transition: opacity .8s ease, visibility .8s ease;
-    }
+.cursor {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--pink);
+  border-radius: 50%;
+  box-shadow:
+    0 0 16px var(--purple),
+    0 0 34px rgba(255, 61, 129, .35);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
 
-    .gate.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
+.cursor::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 16px var(--pink);
+}
 
-    .gate-box {
-      text-align: center;
-      padding: 35px;
-      max-width: 560px;
-      position: relative;
-    }
+.gate {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(179,92,255,.32), transparent 32%),
+    radial-gradient(circle, #1b0030, #020003 72%);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  transition: opacity .9s ease, visibility .9s ease;
+}
 
-    .gate-mark {
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 24px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,157,245,.45);
-      display: grid;
-      place-items: center;
-      box-shadow: 0 0 45px rgba(179,92,255,.35);
-      animation: pulse 3.5s infinite ease-in-out;
-    }
+.gate.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
 
-    .gate-mark span {
-      font-family: Cinzel, serif;
-      font-size: 3.6rem;
-      text-shadow: 0 0 25px var(--pink);
-    }
+.gate-box {
+  width: min(560px, 92%);
+  text-align: center;
+  padding: 42px 28px;
+  border: 1px solid rgba(255,157,245,.25);
+  border-radius: 34px;
+  background: rgba(10, 0, 18, .55);
+  box-shadow:
+    0 0 55px rgba(179,92,255,.25),
+    inset 0 0 45px rgba(255,157,245,.04);
+  backdrop-filter: blur(16px);
+}
 
-    .gate h1 {
-      font-family: Cinzel, serif;
-      font-size: clamp(2.6rem, 11vw, 5.6rem);
-      letter-spacing: .16em;
-      text-shadow:
-        0 0 14px rgba(255,157,245,.9),
-        0 0 45px rgba(179,92,255,.8),
-        0 0 90px rgba(255,61,129,.35);
-    }
+.gate h1 {
+  font-family: Cinzel, serif;
+  font-size: clamp(2.8rem, 11vw, 6rem);
+  letter-spacing: .14em;
+  text-shadow:
+    0 0 18px rgba(255,157,245,.85),
+    0 0 48px rgba(179,92,255,.75);
+}
 
-    .gate p {
-      color: var(--muted);
-      margin: 18px 0 30px;
-      line-height: 1.7;
-    }
+.gate p {
+  color: var(--muted);
+  margin: 18px 0 30px;
+  letter-spacing: .08em;
+}
 
-    button, .link {
-      border: 1px solid rgba(255,157,245,.38);
-      background:
-        radial-gradient(circle at top, rgba(255,157,245,.25), transparent 45%),
-        linear-gradient(135deg, rgba(179,92,255,.35), rgba(55,0,90,.5));
-      color: var(--text);
-      border-radius: 999px;
-      padding: 14px 24px;
-      text-decoration: none;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      transition: .25s ease;
-      box-shadow: 0 0 22px rgba(168,85,247,.18);
-      font-family: Inter, sans-serif;
-    }
+.gate button {
+  border: 1px solid rgba(240,171,252,.38);
+  background:
+    radial-gradient(circle at top, rgba(255,157,245,.22), transparent 44%),
+    linear-gradient(135deg, rgba(168,85,247,.38), rgba(76,29,149,.52));
+  color: var(--text);
+  border-radius: 999px;
+  padding: 14px 25px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  transition: .25s ease;
+  box-shadow: 0 0 24px rgba(168,85,247,.22);
+  cursor: none;
+}
 
-    button:hover, .link:hover {
-      transform: translateY(-5px) scale(1.025);
-      box-shadow:
-        0 0 24px rgba(255,157,245,.45),
-        0 0 60px rgba(179,92,255,.25);
-    }
+.gate button:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 0 26px rgba(240,171,252,.46),
+    0 0 70px rgba(179,92,255,.28);
+}
 
-    .wrap {
-      width: min(1050px, 92%);
-      margin: auto;
-      padding: 70px 0;
-      position: relative;
-      z-index: 2;
-    }
+.wrap {
+  width: min(1050px, 92%);
+  margin: auto;
+  padding: 70px 0;
+  position: relative;
+  z-index: 2;
+}
 
-    .hero {
-      min-height: 78vh;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 60px 0;
-    }
+.hero {
+  min-height: 82vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 70px 0 55px;
+}
 
-    .hero-inner {
-      position: relative;
-    }
+.hero-inner {
+  position: relative;
+}
 
-    .sigil {
-      width: 230px;
-      height: 230px;
-      margin: 0 auto 28px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,157,245,.5);
-      display: grid;
-      place-items: center;
-      position: relative;
-      animation: pulse 3.5s infinite ease-in-out, float 6s ease-in-out infinite;
-    }
+.sigil {
+  width: 230px;
+  height: 230px;
+  margin: 0 auto 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,157,245,.5);
+  display: grid;
+  place-items: center;
+  position: relative;
+  animation: pulse 3.5s infinite ease-in-out, float 6s ease-in-out infinite;
+}
 
-    .sigil::before {
-      content: "horns";
-      position: absolute;
-      top: -35px;
-      font-family: Cinzel, serif;
-      color: rgba(255,157,245,.55);
-      letter-spacing: .6em;
-      text-transform: uppercase;
-      text-indent: .6em;
-      font-size: .8rem;
-    }
+.sigil::before {
+  content: "horns";
+  position: absolute;
+  top: -36px;
+  font-family: Cinzel, serif;
+  color: rgba(255,157,245,.62);
+  letter-spacing: .65em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(255,157,245,.7);
+}
 
-    .sigil::after {
-      content: "";
-      position: absolute;
-      inset: 22px;
-      border: 1px solid rgba(179,92,255,.7);
-      clip-path: polygon(50% 0%, 100% 88%, 0% 88%);
-      filter: drop-shadow(0 0 16px var(--purple));
-    }
+.sigil::after {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(179,92,255,.7);
+  clip-path: polygon(50% 0%, 100% 88%, 0% 88%);
+  filter: drop-shadow(0 0 16px var(--purple));
+}
 
-    .sigil span {
-      font-family: Cinzel, serif;
-      font-size: 4.5rem;
-      z-index: 2;
-      text-shadow: 0 0 28px var(--pink);
-    }
+.sigil span {
+  font-family: Cinzel, serif;
+  font-size: 4.8rem;
+  z-index: 2;
+  text-shadow:
+    0 0 16px var(--pink),
+    0 0 44px var(--purple);
+}
 
-    @keyframes pulse {
-      0%,100% { box-shadow: 0 0 25px rgba(168,85,247,.35); }
-      50% { box-shadow: 0 0 75px rgba(240,171,252,.58); }
-    }
+@keyframes pulse {
+  0%,100% {
+    box-shadow:
+      0 0 26px rgba(168,85,247,.36),
+      inset 0 0 25px rgba(255,157,245,.05);
+  }
+  50% {
+    box-shadow:
+      0 0 70px rgba(240,171,252,.56),
+      inset 0 0 44px rgba(179,92,255,.12);
+  }
+}
 
-    @keyframes float {
-      50% { transform: translateY(-12px); }
-    }
+@keyframes float {
+  50% { transform: translateY(-12px); }
+}
 
-    h1, h2, h3 {
-      font-family: Cinzel, serif;
-    }
+h1, h2 {
+  font-family: Cinzel, serif;
+}
 
-    .hero h1 {
-      font-size: clamp(4rem, 16vw, 10rem);
-      letter-spacing: .12em;
-      line-height: .85;
-      text-shadow:
-        0 0 14px rgba(255,157,245,.9),
-        0 0 45px rgba(179,92,255,.8),
-        0 0 90px rgba(255,61,129,.35);
-    }
+.hero h1 {
+  font-family: Cinzel, serif;
+  font-size: clamp(4rem, 16vw, 10rem);
+  letter-spacing: .12em;
+  line-height: .85;
+  text-shadow:
+    0 0 14px rgba(255,157,245,.9),
+    0 0 45px rgba(179,92,255,.8),
+    0 0 90px rgba(255,61,129,.35);
+}
 
-    .tagline {
-      margin-top: 24px;
-      color: var(--muted);
-      font-size: clamp(1rem, 3vw, 1.35rem);
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
+.tagline {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
 
-    .quote {
-      margin: 28px auto 0;
-      max-width: 680px;
-      font-family: Cinzel, serif;
-      font-size: clamp(1.2rem, 4vw, 2rem);
-      color: #ffe6ff;
-      text-shadow: 0 0 22px rgba(255,157,245,.55);
-    }
+.quote {
+  margin: 30px auto 0;
+  max-width: 720px;
+  font-family: Cinzel, serif;
+  font-size: clamp(1.18rem, 4vw, 2.05rem);
+  color: #ffe6ff;
+  text-shadow: 0 0 22px rgba(255,157,245,.55);
+}
 
-    .card {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(145deg, rgba(24,0,40,.88), rgba(8,0,14,.72));
-      border: 1px solid rgba(255,157,245,.24);
-      border-radius: 30px;
-      padding: 34px;
-      margin: 26px 0;
-      backdrop-filter: blur(18px);
-      box-shadow:
-        0 0 40px rgba(0,0,0,.45),
-        inset 0 0 30px rgba(179,92,255,.06);
-    }
+.card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(24,0,40,.88), rgba(8,0,14,.72));
+  border: 1px solid rgba(255,157,245,.24);
+  border-radius: 30px;
+  padding: 34px;
+  margin: 26px 0;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 40px rgba(0,0,0,.45),
+    inset 0 0 30px rgba(179,92,255,.06);
+}
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(255,157,245,.12), transparent);
-      transform: translateX(-120%);
-      transition: .8s ease;
-      pointer-events: none;
-    }
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,157,245,.12), transparent);
+  transform: translateX(-120%);
+  transition: .8s ease;
+  pointer-events: none;
+}
 
-    .card:hover::before {
-      transform: translateX(120%);
-    }
+.card:hover::before {
+  transform: translateX(120%);
+}
 
-    .card h2 {
-      font-size: clamp(1.7rem, 5vw, 2.5rem);
-      margin-bottom: 14px;
-      text-shadow: 0 0 18px rgba(179,92,255,.6);
-    }
+.card h2 {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.65rem, 5vw, 2.25rem);
+  margin-bottom: 14px;
+  text-shadow: 0 0 18px rgba(179,92,255,.62);
+}
 
-    .card p {
-      line-height: 1.85;
-      color: #eadcff;
-      max-width: 760px;
-    }
+.card p {
+  position: relative;
+  z-index: 1;
+  line-height: 1.8;
+  color: #eadcff;
+  max-width: 76ch;
+}
 
-    .split {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 24px;
-      align-items: stretch;
-    }
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
 
-    .stat-box {
-      border: 1px solid rgba(255,157,245,.22);
-      border-radius: 24px;
-      padding: 24px;
-      background: rgba(0,0,0,.2);
-    }
+.link {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid rgba(255,157,245,.38);
+  background:
+    radial-gradient(circle at top, rgba(255,157,245,.25), transparent 45%),
+    linear-gradient(135deg, rgba(179,92,255,.35), rgba(55,0,90,.5));
+  color: var(--text);
+  border-radius: 18px;
+  padding: 18px 22px;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-align: center;
+  transition: .25s ease;
+  box-shadow: inset 0 0 20px rgba(255,255,255,.035);
+}
 
-    .stat-box strong {
-      display: block;
-      font-family: Cinzel, serif;
-      font-size: 1.4rem;
-      color: #ffe6ff;
-      margin-bottom: 9px;
-      text-shadow: 0 0 18px rgba(255,157,245,.45);
-    }
+.link::after {
+  content: "↗";
+  margin-left: 8px;
+  color: var(--pink);
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
+.link:hover {
+  transform: translateY(-5px) scale(1.025);
+  box-shadow:
+    0 0 24px rgba(255,157,245,.45),
+    0 0 60px rgba(179,92,255,.25);
+}
 
-    .link {
-      display: grid;
-      place-items: center;
-      min-height: 68px;
-      border-radius: 18px;
-      text-align: center;
-    }
+.gallery {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
+.frame {
+  min-height: 225px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,157,245,.28);
+  background:
+    linear-gradient(145deg, rgba(179,92,255,.28), rgba(0,0,0,.5)),
+    radial-gradient(circle at top, rgba(255,61,129,.28), transparent 50%);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  padding: 15px;
+  transition: .25s ease;
+  overflow: hidden;
+}
 
-    .frame {
-      min-height: 220px;
-      border-radius: 26px;
-      border: 1px solid rgba(255,157,245,.28);
-      background:
-        linear-gradient(145deg, rgba(179,92,255,.28), rgba(0,0,0,.5)),
-        radial-gradient(circle at top, rgba(255,61,129,.28), transparent 50%);
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-      text-align: center;
-      padding: 15px;
-      transition: .25s ease;
-      overflow: hidden;
-    }
+.frame:hover {
+  transform: translateY(-6px) rotate(-1deg);
+  box-shadow: 0 0 35px rgba(255,157,245,.25);
+}
 
-    .frame:hover {
-      transform: translateY(-6px) rotate(-1deg);
-      box-shadow: 0 0 35px rgba(255,157,245,.25);
-    }
+.frame img {
+  width: 100%;
+  height: 100%;
+  min-height: 225px;
+  object-fit: cover;
+  border-radius: 24px;
+  display: block;
+}
 
-    .frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 22px;
-      display: block;
-    }
+.whisper {
+  position: fixed;
+  pointer-events: none;
+  color: var(--pink);
+  text-shadow:
+    0 0 12px var(--purple),
+    0 0 28px rgba(255,61,129,.45);
+  font-size: .82rem;
+  opacity: 0;
+  animation: fadeWhisper 1.5s ease forwards;
+  z-index: 5;
+  letter-spacing: .08em;
+  text-transform: lowercase;
+}
 
-    .whisper {
-      position: fixed;
-      pointer-events: none;
-      color: var(--pink);
-      text-shadow: 0 0 12px var(--purple);
-      font-size: .8rem;
-      opacity: 0;
-      animation: fadeWhisper 1.5s ease forwards;
-      z-index: 5;
-    }
+@keyframes fadeWhisper {
+  0% { opacity: .85; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(1.08); }
+}
 
-    @keyframes fadeWhisper {
-      0% { opacity: .82; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-28px); }
-    }
+footer {
+  text-align: center;
+  color: rgba(243,232,255,.48);
+  padding: 38px 0 10px;
+  font-size: .9rem;
+  letter-spacing: .08em;
+}
 
-    footer {
-      text-align: center;
-      color: rgba(243,232,255,.45);
-      padding: 35px 0 10px;
-      font-size: .85rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
+@media (max-width: 650px) {
+  body {
+    cursor: auto;
+  }
 
-    @media (max-width: 760px) {
-      body { cursor: auto; }
-      .cursor, .cursor-dot { display: none; }
-      .hero { min-height: auto; padding-top: 30px; }
-      .sigil { width: 180px; height: 180px; }
-      .split { grid-template-columns: 1fr; }
-      .card { padding: 24px; }
-      .link { min-height: 62px; }
-    }
-  </style>
+  .cursor {
+    display: none;
+  }
+
+  .gate button {
+    cursor: pointer;
+  }
+
+  .hero {
+    min-height: 72vh;
+  }
+
+  .sigil {
+    width: 175px;
+    height: 175px;
+  }
+
+  .sigil span {
+    font-size: 3.5rem;
+  }
+
+  .card {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .link {
+    padding: 16px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="cursor"></div>
-  <div class="cursor-dot"></div>
+<div class="cursor" aria-hidden="true"></div>
 
-  <section class="gate" id="gate">
-    <div class="gate-box">
-      <div class="gate-mark"><span>✦</span></div>
+<section class="gate" id="gate">
+  <div class="gate-box">
+    <h1>EVELYNN</h1>
+    <p>You found the gate. Step carefully.</p>
+    <button type="button" onclick="enterGarden()">Enter the Garden</button>
+  </div>
+</section>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="sigil" aria-hidden="true"><span>✦</span></div>
       <h1>EVELYNN</h1>
-      <p>You found the gate. Step carefully. The garden notices who lingers.</p>
-      <button onclick="enterGarden()">Enter the Garden</button>
+      <p class="tagline">demoness • goddess • devotion made digital</p>
+      <p class="quote">“You came looking for a link. How adorable.”</p>
     </div>
   </section>
 
-  <main class="wrap">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="sigil"><span>✦</span></div>
-        <h1>EVELYNN</h1>
-        <p class="tagline">demoness • goddess • devotion made digital</p>
-        <p class="quote">“You came looking for a link. How adorable.”</p>
-      </div>
-    </section>
+  <section class="card">
+    <h2>The Garden</h2>
+    <p>
+      You have wandered into Evelynn’s domain, where velvet shadows bloom,
+      devotion is noticed, and curiosity is rarely accidental.
+    </p>
+  </section>
 
-    <section class="card split">
-      <div>
-        <h2>The Garden</h2>
-        <p>
-          You have wandered into Evelynn’s domain, where velvet shadows bloom,
-          devotion is noticed, and curiosity is rarely accidental.
-        </p>
-      </div>
-      <div class="stat-box">
-        <strong>Rule of the Garden</strong>
-        <p>Admire. Obey the pull. Leave a tribute if the spell worked.</p>
-      </div>
-    </section>
+  <section class="card">
+    <h2>Tributes</h2>
+    <p>
+      A goddess accepts attention in many forms. Choose yours.
+    </p>
+    <div class="grid">
+      <a class="link" href="https://cash.app/%24EvelynnKelly" target="_blank" rel="noopener noreferrer">Cash App</a>
+      <a class="link" href="https://www.paypal.com/biz/profile/screambean" target="_blank" rel="noopener noreferrer">PayPal</a>
+      <a class="link" href="https://throne.com/goddessevelynnkelly" target="_blank" rel="noopener noreferrer">Throne</a>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Tributes</h2>
-      <p>For those who know that worship is prettier when it leaves a receipt.</p>
-      <div class="grid">
-        <a class="link" href="https://cash.app/%24EvelynnKelly" target="_blank" rel="noopener noreferrer">Cash App</a>
-        <a class="link" href="https://www.paypal.com/biz/profile/screambean" target="_blank" rel="noopener noreferrer">PayPal</a>
-        <a class="link" href="https://throne.com/goddessevelynnkelly" target="_blank" rel="noopener noreferrer">Throne</a>
-      </div>
-    </section>
+  <section class="card">
+    <h2>Summon Her</h2>
+    <p>
+      Follow the trail, enter the circle, and behave accordingly.
+    </p>
+    <div class="grid">
+      <a class="link" href="https://x.com/evelynnkelly04" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+      <a class="link" href="https://bsky.app/profile/evelynnkelly.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+      <a class="link" href="https://discord.com/invite/f4uA5N4yu" target="_blank" rel="noopener noreferrer">Discord</a>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Summon Her</h2>
-      <p>Follow the smoke trail. The abyss has notifications enabled.</p>
-      <div class="grid">
-        <a class="link" href="https://x.com/evelynnkelly04" target="_blank" rel="noopener noreferrer">Twitter / X</a>
-        <a class="link" href="https://bsky.app/profile/evelynnkelly.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
-        <a class="link" href="https://discord.com/invite/f4uA5N4yu" target="_blank" rel="noopener noreferrer">Discord</a>
-      </div>
-    </section>
+  <section class="card">
+    <h2>Relics</h2>
+    <p>
+      Place your favorite art, wallpapers, edits, or screenshots here.
+    </p>
+    <div class="gallery">
+      <div class="frame">Wallpaper 1<br>replace with image</div>
+      <div class="frame">Wallpaper 2<br>replace with image</div>
+      <div class="frame">Wallpaper 3<br>replace with image</div>
+      <div class="frame">Wallpaper 4<br>replace with image</div>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Wallpapers & Relics</h2>
-      <p>Replace these panels with images, edits, screenshots, or favorite posts.</p>
-      <div class="gallery">
-        <div class="frame">Wallpaper 1<br>replace with image</div>
-        <div class="frame">Wallpaper 2<br>replace with image</div>
-        <div class="frame">Wallpaper 3<br>replace with image</div>
-        <div class="frame">Wallpaper 4<br>replace with image</div>
-      </div>
-    </section>
+  <footer>she sees you.</footer>
+</main>
 
-    <footer>she sees you</footer>
-  </main>
+<script>
+const gate = document.getElementById("gate");
+const cursor = document.querySelector(".cursor");
 
-  <script>
-    const gate = document.getElementById("gate");
-    const cursor = document.querySelector(".cursor");
-    const dot = document.querySelector(".cursor-dot");
+function enterGarden() {
+  gate.classList.add("hidden");
+  localStorage.setItem("evelynnGateEntered", "true");
+}
 
-    function enterGarden() {
-      gate.classList.add("hidden");
-    }
+if (localStorage.getItem("evelynnGateEntered") === "true") {
+  gate.classList.add("hidden");
+}
 
-    document.addEventListener("mousemove", event => {
-      cursor.style.left = event.clientX + "px";
-      cursor.style.top = event.clientY + "px";
-      dot.style.left = event.clientX + "px";
-      dot.style.top = event.clientY + "px";
+document.addEventListener("mousemove", event => {
+  if (!cursor) return;
 
-      if (Math.random() > 0.945) {
-        const words = ["closer", "worthy?", "stay", "noticed", "devotion", "tribute", "again"];
-        const whisper = document.createElement("div");
-        whisper.className = "whisper";
-        whisper.textContent = words[Math.floor(Math.random() * words.length)];
-        whisper.style.left = event.clientX + 14 + "px";
-        whisper.style.top = event.clientY + 14 + "px";
-        document.body.appendChild(whisper);
-        setTimeout(() => whisper.remove(), 1500);
-      }
-    });
-  </script>
+  cursor.style.left = event.clientX + "px";
+  cursor.style.top = event.clientY + "px";
+
+  if (window.innerWidth > 650 && Math.random() > 0.945) {
+    const words = ["closer", "worthy?", "stay", "noticed", "devotion", "again", "mine"];
+    const whisper = document.createElement("div");
+    whisper.className = "whisper";
+    whisper.textContent = words[Math.floor(Math.random() * words.length)];
+    whisper.style.left = event.clientX + 14 + "px";
+    whisper.style.top = event.clientY + 14 + "px";
+    document.body.appendChild(whisper);
+
+    setTimeout(() => whisper.remove(), 1500);
+  }
+});
+</script>
 </body>
 </html>
